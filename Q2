@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        int[] arr = { 2, 2, 3, 1, 1 };
+        int minCost = CalculateMinimumCost(arr);
+        Console.WriteLine(minCost); // Output: 9
+    }
+
+    static int CalculateMinimumCost(int[] arr)
+    {
+        // Step 1: Count Element Frequencies
+        var frequencyMap = CountFrequencies(arr);
+
+        // Step 2: Sort by Frequency (Descending)
+        var sortedElements = frequencyMap.OrderByDescending(x => x.Value).ToList();
+
+        // Step 3: Construct the Permutation
+        List<int> permutation = new List<int>();
+        foreach (var element in sortedElements)
+        {
+            for (int i = 0; i < element.Value; i++)
+            {
+                permutation.Add(element.Key);
+            }
+        }
+
+        // Step 4: Calculate the Cost
+        int cost = CalculateCost(permutation);
+        return cost;
+    }
+
+    static Dictionary<int, int> CountFrequencies(int[] arr)
+    {
+        var frequencyMap = new Dictionary<int, int>();
+        foreach (var num in arr)
+        {
+            if (frequencyMap.ContainsKey(num))
+            {
+                frequencyMap[num]++;
+            }
+            else
+            {
+                frequencyMap[num] = 1;
+            }
+        }
+        return frequencyMap;
+    }
+
+    static int CalculateCost(List<int> permutation)
+    {
+        HashSet<int> distinctElements = new HashSet<int>();
+        int cost = 0;
+
+        for (int i = 0; i < permutation.Count; i++)
+        {
+            distinctElements.Add(permutation[i]);
+            cost += distinctElements.Count;
+        }
+
+        return cost;
+    }
+}
